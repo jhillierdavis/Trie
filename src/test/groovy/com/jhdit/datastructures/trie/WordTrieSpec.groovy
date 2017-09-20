@@ -84,9 +84,12 @@ class WordTrieSpec extends Specification {
             results.size() == 0
 
         when:
-            results.add("Bad")
+            results.add("bad")
 
         then:
+            final UnsupportedOperationException  e = thrown()
+
+        and:
             trie.findExact("bogus").size() == 0
 
     }

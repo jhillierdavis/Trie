@@ -3,7 +3,6 @@ package com.jhdit.datastructures.trie;
 import java.util.*;
 
 public class WordTrie implements Trie {
-    // private static final SortedSet<String> EMPTY_SET = new TreeSet<String>();
     private final Map<Character, WordTrie> children = new HashMap<Character, WordTrie>();
     private final SortedSet<String> descendantWords = new TreeSet<String>();
     private final SortedSet<String> exactWords = new TreeSet<String>();
