@@ -1,0 +1,4 @@
+
+Handle invalid arguments (e.g. null)
+Make case-insensitive
+Make interface generic
