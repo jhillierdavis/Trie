@@ -1,19 +1,28 @@
 package com.jhdit.datastructures.trie
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class WordTrieSpec extends Specification {
 
-    void "exact match with result"()   {
+    @Unroll
+    void "exact match with result for #inputWord"()   {
         given:
             WordTrie wordTrie = createTestWordTrie()
 
         when:
-            SortedSet<String> words = wordTrie.findExact( "ant")
+            SortedSet<String> words = wordTrie.findExact( inputWord )
 
         then:
             words.size() == 1
-            words.first() == "ant"
+            words.first() == expected
+
+        where:
+            inputWord||expected
+            "ant"||"ant"
+            "Ant"||"ant"
+            "Bee"||"bee"
+            "BEE"||"bee"
     }
 
     void "exact match without result"()   {
