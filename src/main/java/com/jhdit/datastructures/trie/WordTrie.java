@@ -9,6 +9,10 @@ public class WordTrie implements Trie {
 
     @Override
     public void add(String word) {
+        addNormalised( word.toLowerCase() );
+    }
+
+    private void addNormalised(String word) {
         WordTrie current = this;
         descendantWords.add(word);
         for (Character c : word.toCharArray()) {
@@ -41,7 +45,7 @@ public class WordTrie implements Trie {
 
     Optional<WordTrie> getTrieForLastChar(String word) {
         WordTrie current = this;
-        for (final Character c : word.toCharArray()) {
+        for (final Character c : word.toLowerCase().toCharArray()) {
             current = current.children.get(c);
             if (current == null) {
                 return Optional.empty();
