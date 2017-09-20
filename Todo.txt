@@ -1,3 +1,2 @@
-
 Handle invalid arguments (e.g. null)
-Make case-insensitive
+Add word removal support.
