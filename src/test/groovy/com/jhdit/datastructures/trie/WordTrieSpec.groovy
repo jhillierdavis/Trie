@@ -65,11 +65,9 @@ class WordTrieSpec extends Specification {
 
     WordTrie createTestWordTrie()    {
         WordTrie wordTrie = new WordTrie()
-        wordTrie.add("alligator")
-        wordTrie.add("ant")
-        wordTrie.add("anteater")
-        wordTrie.add("antelope")
-        wordTrie.add("bee")
+        ["alligator", "ant", "anteater", "antelope", "bee"].each() {
+            wordTrie.add(it)
+        }
         return wordTrie
     }
 
