@@ -29,16 +29,19 @@ public class WordTrie implements Trie {
     public SortedSet<String> findPartial(final String wordStart) {
         Optional<WordTrie> current = getTrieForLastChar(wordStart);
         if (current.isPresent())    {
-            return current.get().descendantWords;
+            return Collections.unmodifiableSortedSet( current.get().descendantWords );
         }
         return Collections.emptySortedSet();
     }
 
     @Override
     public SortedSet<String> findExact(String word) {
+        if(null == word  || word.trim().isEmpty())   {
+            throw new IllegalArgumentException("invalid word: " + word);
+        }
         Optional<WordTrie> current = getTrieForLastChar(word);
         if (current.isPresent())    {
-            return current.get().exactWords;
+            return Collections.unmodifiableSortedSet( current.get().exactWords );
         }
         return Collections.emptySortedSet();
     }

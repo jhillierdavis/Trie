@@ -1,2 +1,2 @@
-Handle invalid arguments (e.g. null)
 Add word removal support.
+Ephemeral trie (TTL on entries)

@@ -6,77 +6,95 @@ import spock.lang.Unroll
 class WordTrieSpec extends Specification {
 
     @Unroll
-    void "exact match with result for #inputWord"()   {
+    void "exact match with result for #inputWord"() {
         given:
             WordTrie wordTrie = createTestWordTrie()
 
         when:
-            SortedSet<String> words = wordTrie.findExact( inputWord )
+            SortedSet<String> words = wordTrie.findExact(inputWord)
 
         then:
             words.size() == 1
             words.first() == expected
 
         where:
-            inputWord||expected
-            "ant"||"ant"
-            "Ant"||"ant"
-            "Bee"||"bee"
-            "BEE"||"bee"
+            inputWord || expected
+            "ant"     || "ant"
+            "Ant"     || "ant"
+            "Bee"     || "bee"
+            "BEE"     || "bee"
     }
 
-    void "exact match without result"()   {
+    @Unroll
+    void "exception thrown for exact match with invalid input #inputWord"() {
         given:
             WordTrie wordTrie = createTestWordTrie()
 
         when:
-            SortedSet<String> words = wordTrie.findExact( "unicorn")
+            wordTrie.findExact(inputWord)
+
+        then:
+            IllegalArgumentException e = thrown()
+
+        where:
+            inputWord || _
+            null      || _
+            ""        || _
+            " "       || _
+    }
+
+    void "exact match without result"() {
+        given:
+            WordTrie wordTrie = createTestWordTrie()
+
+        when:
+            SortedSet<String> words = wordTrie.findExact("unicorn")
 
         then:
             words.size() == 0
     }
 
 
-    void "partial match with single result"()   {
+    void "partial match with single result"() {
         given:
             WordTrie wordTrie = createTestWordTrie()
 
         when:
-            SortedSet<String> words = wordTrie.findPartial( "b")
+            SortedSet<String> words = wordTrie.findPartial("b")
 
         then:
             words.size() == 1
             words.containsAll(['bee'])
     }
 
-    void "partial match with multiple results"()   {
+    void "partial match with multiple results"() {
         given:
             WordTrie wordTrie = createTestWordTrie()
 
         when:
-            SortedSet<String> words = wordTrie.findPartial( "ant")
+            SortedSet<String> words = wordTrie.findPartial("ant")
 
         then:
             words.size() == 3
             words.containsAll(['ant', 'anteater', 'antelope'])
     }
 
-    void "partial match with no results"()   {
+    void "partial match with no results"() {
         given:
             WordTrie wordTrie = createTestWordTrie()
 
         when:
-            SortedSet<String> words = wordTrie.findPartial( "c")
+            SortedSet<String> words = wordTrie.findPartial("c")
 
         then:
             words.size() == 0
     }
 
-    WordTrie createTestWordTrie()    {
+    WordTrie createTestWordTrie() {
         return createTestWordTrie(["alligator", "Ant", "AntEater", "antelope", "bee"] as Set<String>)
     }
 
-    WordTrie createTestWordTrie(Set<String> words)    {
+    WordTrie createTestWordTrie(Set<String> words) {
         WordTrie wordTrie = new WordTrie()
         words.each() {
             wordTrie.add(it)
@@ -84,7 +102,7 @@ class WordTrieSpec extends Specification {
         return wordTrie
     }
 
-    void "empty result set cannot be manipulated"()    {
+    void "empty result set cannot be manipulated"() {
         given:
             Trie trie = new WordTrie()
 
@@ -98,10 +116,31 @@ class WordTrieSpec extends Specification {
             results.add("bad")
 
         then:
-            final UnsupportedOperationException  e = thrown()
+            final UnsupportedOperationException e = thrown()
 
         and:
             trie.findExact("bogus").size() == 0
+
+    }
+
+    void "result set cannot be manipulated"() {
+        given:
+            Trie trie = createTestWordTrie()
+
+        when:
+            def results = trie.findPartial("ant")
+
+        then:
+            results.size() == 3
+
+        when:
+            results.add("bad")
+
+        then:
+            final UnsupportedOperationException e = thrown()
+
+        and:
+            trie.findPartial("ant").size() == 3
 
     }
 
