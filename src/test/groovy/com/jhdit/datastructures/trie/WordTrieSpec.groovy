@@ -144,4 +144,52 @@ class WordTrieSpec extends Specification {
 
     }
 
+
+    void "prefix words can be removed"() {
+        given:
+            Trie trie = createTestWordTrie()
+
+        when:
+            def results = trie.findPartial("ant")
+
+        then:
+            results.size() == 3
+
+        and:
+            trie.findExact("ant").size() == 1
+
+        when:
+            trie.remove("ant")
+
+        then:
+            trie.findPartial("ant").size() == 2
+
+        and:
+            trie.findExact("ant").size() == 0
+
+    }
+
+    void "single words can be removed"() {
+        given:
+            WordTrie wordTrie = createTestWordTrie()
+
+        when:
+            SortedSet<String> words = wordTrie.findPartial("b")
+
+        then:
+            words.size() == 1
+            words.containsAll(['bee'])
+
+        when:
+            wordTrie.remove('bee')
+            words = wordTrie.findPartial("b")
+
+        then:
+            words.size() == 0
+
+//        and:
+//
+//            wordTrie.display()
+//            !wordTrie.getTrieForLastChar('bee').isPresent()
+   }
 }

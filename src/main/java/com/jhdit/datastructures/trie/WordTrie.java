@@ -2,7 +2,7 @@ package com.jhdit.datastructures.trie;
 
 import java.util.*;
 
-public class WordTrie implements Trie {
+public class WordTrie implements MutableTrie {
     private final Map<Character, WordTrie> children = new HashMap<Character, WordTrie>();
     private final SortedSet<String> descendantWords = new TreeSet<String>();
     private final SortedSet<String> exactWords = new TreeSet<String>();
@@ -46,6 +46,10 @@ public class WordTrie implements Trie {
         return Collections.emptySortedSet();
     }
 
+    public boolean remove(String word)    {
+        return removeNormalised(word.toLowerCase());
+    }
+
     Optional<WordTrie> getTrieForLastChar(String word) {
         WordTrie current = this;
         for (final Character c : word.toLowerCase().toCharArray()) {
@@ -55,5 +59,36 @@ public class WordTrie implements Trie {
             }
         }
         return Optional.of(current);
+    }
+
+    private boolean removeNormalised(String word) {
+        WordTrie current = this;
+
+        descendantWords.remove(word);
+
+        for (Character c : word.toCharArray()) {
+            current = current.children.get(c);
+            current.descendantWords.remove(word);
+            if (descendantWords.size() == 0)    {
+                current.children.clear();
+                return true;
+            }
+        }
+        return current.exactWords.remove(word);
+    }
+
+    void display()    {
+        display(this);
+    }
+
+    void display(WordTrie wordTrie)    {
+        if (!wordTrie.children.isEmpty())    {
+            for(Character key: wordTrie.children.keySet())  {
+                System.out.print(key);
+                display(wordTrie.children.get(key));
+                System.out.println();
+            }
+
+        }
     }
 }
