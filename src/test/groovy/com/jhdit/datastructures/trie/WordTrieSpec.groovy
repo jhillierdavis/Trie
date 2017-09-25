@@ -187,9 +187,8 @@ class WordTrieSpec extends Specification {
         then:
             words.size() == 0
 
-//        and:
-//
-//            wordTrie.display()
-//            !wordTrie.getTrieForLastChar('bee').isPresent()
+        and: "internal data structure removes entry"
+            wordTrie.getTrieForLastChar('bee').isPresent() == false
+            wordTrie.getTrieForLastChar('b').isPresent() == false
    }
 }

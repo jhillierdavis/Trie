@@ -64,31 +64,23 @@ public class WordTrie implements MutableTrie {
     private boolean removeNormalised(String word) {
         WordTrie current = this;
 
-        descendantWords.remove(word);
+        current.descendantWords.remove(word);
+        if (current.descendantWords.size() == 0)    {
+            current.children.clear();
+            return true;
+        }
 
+        WordTrie parent;
         for (Character c : word.toCharArray()) {
+            parent = current;
             current = current.children.get(c);
             current.descendantWords.remove(word);
-            if (descendantWords.size() == 0)    {
-                current.children.clear();
+            if (current.descendantWords.size() == 0)    {
+                // current.children.clear();
+                parent.children.remove(c);
                 return true;
             }
         }
         return current.exactWords.remove(word);
-    }
-
-    void display()    {
-        display(this);
-    }
-
-    void display(WordTrie wordTrie)    {
-        if (!wordTrie.children.isEmpty())    {
-            for(Character key: wordTrie.children.keySet())  {
-                System.out.print(key);
-                display(wordTrie.children.get(key));
-                System.out.println();
-            }
-
-        }
     }
 }
