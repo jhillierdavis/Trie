@@ -1,2 +1,1 @@
-Add word removal support.
 Ephemeral trie (TTL on entries)
